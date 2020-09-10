@@ -1,22 +1,25 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
-const ARROW_PATH = "/arrow_down_line.svg";
-const CANCEL_PATH = "/talk_cancel.svg";
+import useStore from "../UseStore";
+import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 function TodoListItem(props) {
-const [isDone, setDone] = useState(false);
-const handleClick = () => {
-    setDone(!isDone);
-    console.log(isDone);
-}
+  const [isDone, setDone] = useState(props.item.done);
+  const [text, setText] = useState(props.item.text);
+  const { TodoStore } = useStore();
+  const onToggle = () => {
+    console.log(props.item.id + " " + props.item.done);
+    TodoStore.updateTodoList(props.item.id, text, !props.item.done);
+    TodoStore.getLeft();
+  };
   return (
     <WrappedItem>
-      <DoneIcon onClick = {handleClick}>
-        <img src={ARROW_PATH} style = {{ opacity : isDone? 1: 0.3}}alt="" />
-      </DoneIcon> 
-      <Text done={isDone}>{props.text}</Text>
+      <DoneIcon onClick={onToggle}>
+        <CheckCircleOutlined style={{ opacity: props.item.done ? 1 : 0.3, marginRight: '15px' }}/>
+      </DoneIcon>
+      <Text done={props.item.done} style={{ paddingRight: '250px' }}>{props.item.text}</Text>
       <RemoveIcon>
-        <img src={CANCEL_PATH} alt="" />
+      <DeleteOutlined />
       </RemoveIcon>
     </WrappedItem>
   );
@@ -26,19 +29,15 @@ const RemoveIcon = styled.div`
   display: none;
 `;
 const WrappedItem = styled.div`
-display: flex;
-align-items: center;
-&: hover {
-      ${RemoveIcon} {
-          display: initial;
-      }
-}
+  display: flex;
+  align-items: center;
+  &: hover {
+    ${RemoveIcon} {
+      display: initial;
+    }
+  }
 `;
-const DoneIcon = styled.div`
-
-`;
-const Text = styled.div`
-
-`;
+const DoneIcon = styled.div``;
+const Text = styled.div``;
 
 export default TodoListItem;
