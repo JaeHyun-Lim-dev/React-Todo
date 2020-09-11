@@ -3,7 +3,8 @@ import { useObserver } from "mobx-react";
 import styled from "styled-components";
 import TodoListItem from "./TodoListItem";
 import TodoSearchForm from "./TodoSearchForm";
-import TodoCreateForm from "./TodoCreateFrom"
+import TodoCreateForm from "./TodoCreateFrom";
+import TodoCheckBox from './TodoCheckBox';
 import { Divider } from "antd";
 import useStore from "../UseStore";
 
@@ -19,6 +20,7 @@ function TodoBody(props) {
   return useObserver(() => (
     <div>
         <WrappedBody>
+          <TodoCheckBox/>
           <TodoCreateForm/>
           <TodoSearchForm/>
           {TodoStore.filterList.map((tList, idx) => (

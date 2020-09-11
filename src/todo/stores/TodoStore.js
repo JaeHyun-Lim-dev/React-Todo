@@ -7,16 +7,13 @@ const TodoStore = observable(
     todoList: [],
     filterList: [],
     searchWord: '',
-    onlyUndone: true,
+    seeDone: false,
     getTodoList(todoId) {
       const result = TodoRepository.getInitialTodo();
       this.todoList.replace(result);
       console.log(this.todoList.length);
     },
     getLeft() {
-      console.log(
-        "getLeft " + this.todoList.filter((item) => item.done === true).length
-      );
       return this.todoList.filter((item) => item.done === false).length;
     },
     updateTodoList(todoId, nextText, nextDone) {
@@ -24,6 +21,7 @@ const TodoStore = observable(
         return;
       }
       const targetIdx = this.todoList.findIndex((e) => {
+        if (e.id === todoId) console.log(e.text + ' to ' + nextText);
         return e.id === todoId;
       });
       this.todoList[targetIdx] = {
@@ -34,6 +32,7 @@ const TodoStore = observable(
       this.searchTodo(this.searchWord);
     },
     createTodo(newText) {
+      if (this.todoList.length === 0) return;
       const targetIdx = this.todoList[this.todoList.length - 1].id;
       const nextIdx= this.todoList.length;
       this.todoList[nextIdx] = {
@@ -47,10 +46,19 @@ const TodoStore = observable(
       const targetIdx = this.todoList.findIndex((e) => {
         return e.id === todoId;
       });
-      this.todoList.splice(targetIdx, 1);
+      this.todoList.splice(targetIdx, 1);    
+      this.searchTodo(this.searchWord);
+    },
+    setSeeDone() {
+      this.seeDone =!this.seeDone;
+      this.searchTodo(this.searchWord);
     },
     searchTodo(targetText) {
       this.filterList = this.todoList.filter(t => t.text.match(targetText));
+      this.filterList = this.filterList.filter(t => (t.done === false || this.seeDone === true));
+      for(let i = 0; i< this.filterList.length; i++) {
+        console.log('id: ' + this.filterList[i].id + ', text: ' + this.filterList[i].text);
+      }
       this.searchWord = targetText;
     }, 
   },

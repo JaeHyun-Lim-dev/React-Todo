@@ -52,7 +52,6 @@ const TodoSearchForm = (props) => {
           value={value}
           prefix={<SearchOutlined onClick={onFinish} style = {{paddingRight: '5px'}} />}  
           onChange={handleChange}
-          onsub
           style={{ width: "400px" }}
         />
       </Form.Item>

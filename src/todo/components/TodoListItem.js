@@ -7,23 +7,16 @@ import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 function TodoListItem(props) {
   const [isDone, setDone] = useState(props.item.done);
-  const [text, setText] = useState(props.item.text);
   const [isModify, setIsModify] = useState(false);
   const [value, setValue] = useState(props.item.text);
   const { TodoStore } = useStore();
-  useEffect(() => {
-    if (TodoStore.todoList.length === 0) {
-      TodoStore.getTodoList();
-    }
-    TodoStore.searchTodo();
-  }, [TodoStore]);
   const onToggle = () => {
     console.log(props.item.id + " " + props.item.done);
-    TodoStore.updateTodoList(props.item.id, text, !props.item.done);
+    TodoStore.updateTodoList(props.item.id, props.item.text, !props.item.done);
     TodoStore.getLeft();
   };
   const deleteTodo = () => {
-    console.log("delete " + props.item.text);
+    console.log("delete " + props.item.text + props.item.id);
     TodoStore.deleteTodo(props.item.id);
     TodoStore.getLeft();
   };
@@ -43,9 +36,11 @@ function TodoListItem(props) {
     setIsModify(!isModify);
   }
   const handleKey = (e) => {
-    if (e.keyCode === 27) {
+    if (e.keyCode === 27) {  
+      e.preventDefault();
       console.log("escape");
-      handleBlur(e);
+      setIsModify(!isModify);
+      //handleBlur(e);
     }
   } 
   
