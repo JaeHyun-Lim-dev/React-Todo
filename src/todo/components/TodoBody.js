@@ -1,28 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useObserver } from "mobx-react";
-import { toJS } from "mobx";
 import styled from "styled-components";
 import TodoListItem from "./TodoListItem";
-import TodoAddTask from "./TodoAddTask";
 import TodoSearchForm from "./TodoSearchForm";
+import TodoCreateForm from "./TodoCreateFrom"
 import { Divider } from "antd";
 import useStore from "../UseStore";
 
 function TodoBody(props) {
   const { TodoStore } = useStore();
   useEffect(() => {
-    if (TodoStore.TodoList.length === 0) {
+    console.log("todoBody");
+    if (TodoStore.todoList.length === 0) {
       TodoStore.getTodoList();
     }
+    TodoStore.searchTodo();
   }, [TodoStore]);
   return useObserver(() => (
     <div>
         <WrappedBody>
+          <TodoCreateForm/>
           <TodoSearchForm/>
-          {TodoStore.TodoList.map((todoList, idx) => (
+          {TodoStore.filterList.map((tList, idx) => (
             <div key={idx}>
               {idx === Number(0) ? null : <Divider/>}
-              <TodoListItem key={idx} item={todoList} />
+              <TodoListItem key={idx} item={tList} />
             </div>
           ))}
         </WrappedBody>

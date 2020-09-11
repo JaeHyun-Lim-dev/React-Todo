@@ -1,28 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
+import { useObserver } from "mobx-react";
 import useStore from "../UseStore";
+import {Form, Input } from 'antd';
 import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 
 function TodoListItem(props) {
   const [isDone, setDone] = useState(props.item.done);
   const [text, setText] = useState(props.item.text);
+  const [isModify, setIsModify] = useState(false);
+  const [value, setValue] = useState(props.item.text);
   const { TodoStore } = useStore();
+  useEffect(() => {
+    if (TodoStore.todoList.length === 0) {
+      TodoStore.getTodoList();
+    }
+    TodoStore.searchTodo();
+  }, [TodoStore]);
   const onToggle = () => {
     console.log(props.item.id + " " + props.item.done);
     TodoStore.updateTodoList(props.item.id, text, !props.item.done);
     TodoStore.getLeft();
   };
-  return (
+  const deleteTodo = () => {
+    console.log("delete " + props.item.text);
+    TodoStore.deleteTodo(props.item.id);
+    TodoStore.getLeft();
+  };
+  const modifyText = () => {
+    if (isModify) return;
+    console.log('doubleclicked');
+    setIsModify(!isModify);
+  }
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  }
+  const handleBlur = (event) => {
+    event.preventDefault();
+    
+    console.log('handleBlur');
+    TodoStore.updateTodoList(props.item.id, value, props.item.done);
+    setIsModify(!isModify);
+  }
+  const handleKey = (e) => {
+    if (e.keyCode === 27) {
+      console.log("escape");
+      handleBlur(e);
+    }
+  } 
+  
+  const onFinish = () => {
+    console.log('submit');
+    TodoStore.searchTodo(value); 
+  };
+  return useObserver(() => (
     <WrappedItem>
       <DoneIcon onClick={onToggle}>
-        <CheckCircleOutlined style={{ opacity: props.item.done ? 1 : 0.3, marginRight: '15px' }}/>
+        <CheckCircleOutlined style={{ opacity: props.item.done ? 1 : 0.3 }} />
       </DoneIcon>
-      <Text done={props.item.done} style={{ paddingRight: '250px' }}>{props.item.text}</Text>
-      <RemoveIcon>
-      <DeleteOutlined />
+      <div onDoubleClick = {modifyText}>
+      {isModify? <form onSubmit = {handleBlur}>
+        <input value = {value} onChange = {handleChange} onBlur = {handleBlur} onKeyDown = {handleKey}></input>
+      </form> : <Text done={props.item.done}>{props.item.text}</Text>}
+      </div>
+      <RemoveIcon onClick={deleteTodo}>
+        <DeleteOutlined />
       </RemoveIcon>
     </WrappedItem>
-  );
+  ));
 }
 
 const RemoveIcon = styled.div`
@@ -37,7 +82,17 @@ const WrappedItem = styled.div`
     }
   }
 `;
-const DoneIcon = styled.div``;
-const Text = styled.div``;
+const DoneIcon = styled.div`
+  padding: 5px 10px;
+  margin-right: 15px;
+`;
+const Text = styled.div`
+  width: 400px;
+  height: 30px;
+  font-size: 21px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  overflow: hidden;
+`;
 
 export default TodoListItem;

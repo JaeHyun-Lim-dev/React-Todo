@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import useStore from "../UseStore";
 
-const TodoSearchForm = (props) => {
+const TodoCreateForm = (props) => {
   const { TodoStore } = useStore();
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState("inline");
   const [value, setValue] = useState("");
+  const [addTodo, setAddTodo] = useState(false);
 
+  const onFormLayoutChange = ({ layout }) => {
+    setFormLayout(layout);
+  };
   const onFinish = () => {
-    console.log('submit');
-    TodoStore.searchTodo(value);
-    
+    TodoStore.createTodo(value);
+    setValue("");
+    setAddTodo(!addTodo);
   };
   const handleChange = (event) => {
     setValue(event.target.value);
-    if (value.length === 0) TodoStore.searchTodo('');
+  };
+  const onToggle = () => {
+    setAddTodo(!addTodo);
   };
   const formItemLayout =
     formLayout === "inline"
@@ -40,24 +46,29 @@ const TodoSearchForm = (props) => {
       {...formItemLayout}
       layout={formLayout}
       form={form}
-      onFinish = {onFinish}
       initialValues={{
         layout: formLayout,
       }}
+      onFinish={onFinish}
       style={{ marginBottom: "25px", width: "400px" }}
     >
       <Form.Item style={{ display: "inline" }}>
-        <Input
-          placeholder="검색"
-          value={value}
-          prefix={<SearchOutlined onClick={onFinish} style = {{paddingRight: '5px'}} />}  
-          onChange={handleChange}
-          onsub
-          style={{ width: "400px" }}
-        />
+        {addTodo ? (
+          <Input
+            placeholder="할 일을 입력"
+            value={value}
+            onChange={handleChange}
+            style={{ width: "400px" }}
+            prefix = {<CloseOutlined onClick = {onToggle}/>}
+          />
+        ) : (
+            <Button onClick = {onToggle}>
+            <PlusOutlined />
+            </Button>
+        )}
       </Form.Item>
     </Form>
   );
 };
 
-export default TodoSearchForm;
+export default TodoCreateForm;

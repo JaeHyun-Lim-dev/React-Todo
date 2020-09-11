@@ -12,9 +12,14 @@ const initialTodos = [
   },
   {
     id: 3,
-    text: "Todo3",
+    text: "Todo333333",
     done: false,
   },
+  {
+    id: 4,
+    text: "Todo4 Todo4 Todo4 Todo4 Todo4 Todo4 Todo4 Todo4 Todo4 Todo4 ",
+    done: false,
+  }
 ];
 
 class TodoRepository {
