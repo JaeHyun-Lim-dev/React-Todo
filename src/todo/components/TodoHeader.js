@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useObserver } from "mobx-react";
 import styled from "styled-components";
 import useStore from "../UseStore";
@@ -6,7 +6,6 @@ import 'antd/dist/antd.css';
 
 function TodoHeader(props) {
   const [date, setDate] = useState(new Date());
-  const [taskCnt, setTaskCnt] = useState(0);
   const { TodoStore } = useStore();
 
   const getDate = (date) => {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useObserver } from "mobx-react";
 import { Form, Input, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import useStore from "../UseStore";
@@ -9,14 +10,11 @@ const TodoSearchForm = (props) => {
   const [formLayout, setFormLayout] = useState("inline");
   const [value, setValue] = useState("");
 
-  const onFinish = () => {
-    console.log('submit');
-    TodoStore.searchTodo(value);
-    
-  };
   const handleChange = (event) => {
+    // event.preventDefault();
     setValue(event.target.value);
-    if (value.length === 0) TodoStore.searchTodo('');
+    TodoStore.searchTodo(event.target.value);
+    // console.log("searchWord: " + TodoStore.searchWord);
   };
   const formItemLayout =
     formLayout === "inline"
@@ -35,12 +33,12 @@ const TodoSearchForm = (props) => {
           },
         }
       : null;
-  return (
+
+  return useObserver(() => (
     <Form
       {...formItemLayout}
       layout={formLayout}
       form={form}
-      onFinish = {onFinish}
       initialValues={{
         layout: formLayout,
       }}
@@ -49,14 +47,19 @@ const TodoSearchForm = (props) => {
       <Form.Item style={{ display: "inline" }}>
         <Input
           placeholder="검색"
-          value={value}
-          prefix={<SearchOutlined onClick={onFinish} style = {{paddingRight: '5px'}} />}  
-          onChange={handleChange}
+          // value={value}
+          prefix={
+            <SearchOutlined
+              onClick={handleChange}
+              style={{ paddingRight: "5px" }}
+            />
+          }
+          onChange={handleChange} // onChange -> onKeyDown(onKeyPress) -> onKeyUp
           style={{ width: "400px" }}
         />
       </Form.Item>
     </Form>
-  );
+  ));
 };
 
 export default TodoSearchForm;

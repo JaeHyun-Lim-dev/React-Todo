@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
+import { useObserver } from "mobx-react";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import useStore from "../UseStore";
 
@@ -10,9 +11,6 @@ const TodoCreateForm = (props) => {
   const [value, setValue] = useState("");
   const [addTodo, setAddTodo] = useState(false);
 
-  const onFormLayoutChange = ({ layout }) => {
-    setFormLayout(layout);
-  };
   const onFinish = () => {
     TodoStore.createTodo(value);
     setValue("");
@@ -32,15 +30,6 @@ const TodoCreateForm = (props) => {
           },
         }
       : null;
-  const buttonItemLayout =
-    formLayout === "inline"
-      ? {
-          wrapperCol: {
-            span: 14,
-            offset: 4,
-          },
-        }
-      : null;
   return (
     <Form
       {...formItemLayout}
@@ -50,7 +39,7 @@ const TodoCreateForm = (props) => {
         layout: formLayout,
       }}
       onFinish={onFinish}
-      style={{ marginBottom: "25px", width: "400px" }}
+      style={{ marginBottom: "25px", width: "200px" }}
     >
       <Form.Item style={{ display: "inline" }}>
         {addTodo ? (

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import React, { useState } from "react";
+import styled from "styled-components";
 import { useObserver } from "mobx-react";
 import useStore from "../UseStore";
 import {Form, Input } from 'antd';
@@ -30,7 +30,6 @@ function TodoListItem(props) {
   }
   const handleBlur = (event) => {
     event.preventDefault();
-    
     console.log('handleBlur');
     TodoStore.updateTodoList(props.item.id, value, props.item.done);
     setIsModify(!isModify);
@@ -40,13 +39,14 @@ function TodoListItem(props) {
       e.preventDefault();
       console.log("escape");
       setIsModify(!isModify);
+      setValue(props.item.text);
       //handleBlur(e);
     }
   } 
   
   const onFinish = () => {
     console.log('submit');
-    TodoStore.searchTodo(value); 
+    TodoStore.searchTodo(value);
   };
   return useObserver(() => (
     <WrappedItem>

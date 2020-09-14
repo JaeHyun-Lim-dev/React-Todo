@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useObserver } from "mobx-react";
 import styled from "styled-components";
 import TodoListItem from "./TodoListItem";
@@ -15,15 +15,16 @@ function TodoBody(props) {
     if (TodoStore.todoList.length === 0) {
       TodoStore.getTodoList();
     }
-    TodoStore.searchTodo();
   }, [TodoStore]);
   return useObserver(() => (
     <div>
         <WrappedBody>
-          <TodoCheckBox/>
+          <div style = {{flex: 1, flexDirection: 'column'}}>         
           <TodoCreateForm/>
+          <TodoCheckBox/>
+          </div>
           <TodoSearchForm/>
-          {TodoStore.filterList.map((tList, idx) => (
+          {TodoStore.filteredTodoList.map((tList, idx) => (
             <div key={idx}>
               {idx === Number(0) ? null : <Divider/>}
               <TodoListItem key={idx} item={tList} />
