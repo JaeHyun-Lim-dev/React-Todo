@@ -4,7 +4,7 @@ Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
-(v0.1) making Todo app with React Hook, store model(dummy data), ant design   
+### (v0.1) making Todo app with React Hook, store model(dummy data), ant design   
 
 ### Options   
 1. 오늘의 날짜와 Todo Task들에 대해 CRUD를 지원   
